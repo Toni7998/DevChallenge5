@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carta més alta</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+
     <h1>Carta més alta</h1>
+
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <h2>🎮 Benvingut al joc!</h2>
+            <input type="text" id="gameIdInput" placeholder="Nom de la partida">
+            <input type="text" id="playerNameInput" placeholder="El teu nom">
+            <button id="joinGameButton">Unir-se a la partida</button>
+        </div>
+    </div>
+
     <div id="gameArea">
         <p>Esperant a un altre jugador...</p>
     </div>
@@ -15,4 +28,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

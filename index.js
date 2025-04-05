@@ -44,12 +44,22 @@ io.on('connection', (socket) => {
         const { gameId, cardIndex } = data;
         const game = games[gameId];
 
-        if (game) {
-            game.cards[socket.id].chosenCard = game.cards[socket.id][cardIndex];
-            if (Object.values(game.cards).every(cards => cards.chosenCard !== undefined)) {
-                const winner = determineWinner(game.cards, game.names);
-                io.to(gameId).emit('gameResult', winner);
+        // Comprobamos si el jugador está en el juego antes de intentar acceder a las cartas
+        if (game && game.players.includes(socket.id)) {
+            if (game.cards && game.cards[socket.id] && Array.isArray(game.cards[socket.id]) && game.cards[socket.id][cardIndex]) {
+                game.cards[socket.id].chosenCard = game.cards[socket.id][cardIndex];
+
+                if (Object.values(game.cards).every(cards => cards.chosenCard !== undefined)) {
+                    const winner = determineWinner(game.cards, game.names);
+                    io.to(gameId).emit('gameResult', winner);
+                }
+            } else {
+                console.log(`Jugador ${socket.id} ha intentado triar una carta però la carta no és vàlida o no existeix.`);
+                socket.emit('errorMessage', 'La carta no és vàlida.');
             }
+        } else {
+            console.log(`Jugador ${socket.id} ha intentado interactuar pero no está en el juego.`);
+            socket.emit('errorMessage', 'No estàs dins la partida activa.');
         }
     });
 
