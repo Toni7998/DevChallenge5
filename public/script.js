@@ -49,22 +49,6 @@ socket.on('gameStart', (data) => {
 
     renderCards(playerCards);
 
-    playerCards.forEach((card, index) => {
-        const cardElem = document.createElement('div');
-        cardElem.classList.add('card');
-
-        const img = document.createElement('img');
-        img.src = `images/carta.png`;
-        img.alt = 'Carta';
-
-        cardElem.appendChild(img);
-
-        cardElem.onclick = () => {
-            socket.emit('pickCard', { gameId, cardIndex: index });
-            selectCard(cardElem);
-        };
-        gameArea.appendChild(cardElem);
-    });
 });
 
 socket.on('gameResult', (result) => {
