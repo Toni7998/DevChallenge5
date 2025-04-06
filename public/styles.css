@@ -15,25 +15,31 @@ body {
     background-size: cover;
 }
 
+h1,
+h2,
+p {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 h1 {
-    font-size: 3.5rem;
+    font-size: 4rem;
     color: #fff;
     margin-bottom: 30px;
     font-family: 'Lora', serif;
-    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     color: #fff;
     margin-bottom: 20px;
-    margin-top: 273px;
 }
 
 p {
     font-size: 1.2rem;
-    margin-top: 280px;
+    margin-top: 30px;
     color: #f1f1f1;
+    font-weight: 400;
 }
 
 /* Game Area Styling */
@@ -41,8 +47,8 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;
-    margin-top: 233px;
+    gap: 30px;
+    margin-top: 50px;
     width: 100%;
     max-width: 1000px;
     flex-wrap: wrap;
@@ -51,89 +57,99 @@ p {
 
 /* Card Styling */
 .card {
-    width: 150px;
-    height: 230px;
+    width: 160px;
+    height: 240px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Slightly translucent for a layered look */
 }
 
 .card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-12px);
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
 }
 
 .card.selected {
-    border: 3px solid #0adf38;
-    box-shadow: 0px 10px 20px rgba(0, 128, 0, 0.2);
+    border: 4px solid #0adf38;
+    box-shadow: 0px 12px 20px rgba(0, 128, 0, 0.2);
 }
 
 /* Result Message Box Styling */
 .message-box {
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 30px;
-    font-size: 1.2rem;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 40px;
+    font-size: 1.4rem;
     max-width: 600px;
-    margin: 20px auto;
+    margin: 30px auto;
     text-align: center;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
 }
 
 .message-box.win {
     background: #4caf50;
-    color: #fff;
-    margin-top: 273px;
 }
 
 .message-box.draw {
     background: #fbc02d;
-    color: #fff;
-    margin-top: 273px;
 }
 
 .message-box.lose {
     background: #e57373;
-    color: #fff;
-    margin-top: 273px;
 }
 
 /* Button Styling */
 button {
-    padding: 15px 30px;
+    padding: 18px 35px;
     background: #3f51b5;
     color: #fff;
     border: none;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    margin-top: 40px;
+    border-radius: 40px;
+    font-size: 1.4rem;
+    margin-top: 50px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #283593;
+    transform: scale(1.05);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .card {
-        width: 30%;
-        min-width: 100px;
-    }
     h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
+
     h2 {
-        font-size: 2rem;
+        font-size: 2.2rem;
+    }
+
+    .card {
+        width: 120px;
+        height: 180px;
+    }
+
+    button {
+        width: 90%;
+        padding: 12px;
+        font-size: 1.2rem;
     }
 }
 
@@ -149,50 +165,53 @@ button:hover {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    transition: opacity 0.3s ease;
 }
 
 .modal-content {
     background: linear-gradient(to bottom right, #111, #222);
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0px 10px 30px rgba(0, 255, 255, 0.3);
+    padding: 50px;
+    border-radius: 25px;
+    box-shadow: 0px 12px 40px rgba(0, 255, 255, 0.3);
     text-align: center;
     color: #fff;
     width: 90%;
-    max-width: 500px;
+    max-width: 550px;
     animation: fadeIn 0.5s ease;
 }
 
 .modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 2rem;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
     color: #00ffff;
+    text-transform: uppercase;
 }
 
 .modal-content input {
     width: 80%;
-    padding: 15px;
-    margin: 10px 0;
+    padding: 18px;
+    margin: 15px 0;
     border: none;
     border-radius: 10px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     text-align: center;
 }
 
 .modal-content button {
     width: 80%;
-    padding: 15px;
-    font-size: 1.1rem;
+    padding: 18px;
+    font-size: 1.3rem;
     border: none;
-    border-radius: 30px;
+    border-radius: 40px;
     background-color: #00c4cc;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .modal-content button:hover {
     background-color: #008fa1;
+    transform: scale(1.05);
 }
 
 @keyframes fadeIn {
@@ -200,6 +219,7 @@ button:hover {
         opacity: 0;
         transform: scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -207,6 +227,14 @@ button:hover {
 }
 
 body.not-in-game {
-    background-color: #111 !important; /* o cualquier color que indique "fuera del juego" */
+    background-color: #111 !important;
+    /* Color de fondo para indicar que el jugador no está en el juego */
     background-image: none !important;
+    color: #fff;
+}
+
+body.not-in-game h1,
+body.not-in-game h2 {
+    color: #00ff88;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
