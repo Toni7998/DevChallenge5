@@ -68,7 +68,7 @@ socket.on('gameStart', (data) => {
 
 socket.on('gameResult', (result) => {
     gameArea.innerHTML = `<h2>Resultat</h2>
-                          <p>${result.winner ? `${result.winner} ha guanyat!` : "Empat!"}</p>
+                          <p>${result.winner ? `Jugador: ${result.winner} ha guanyat!` : "Empat!"}</p>
                           <p>La teva carta: ${result.card1.value} de ${result.card1.suit}</p>
                           <p>La carta de l'altre jugador: ${result.card2.value} de ${result.card2.suit}</p>`;
 
