@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
 
         if (games[gameId].players.length < 2) {
             games[gameId].players.push(socket.id);
-            games[gameId].names[socket.id] = playerName; // Guardar nombre del jugador
+            games[gameId].names[socket.id] = playerName;
             socket.join(gameId);
 
             if (games[gameId].players.length === 2) {
@@ -33,6 +33,8 @@ io.on('connection', (socket) => {
                     cards: games[gameId].cards,
                     names: games[gameId].names
                 });
+            } else {
+                socket.emit('waitingForPlayers', 'Esperant a un altre jugador per començar la partida...');
             }
         } else {
             games[gameId].waitingQueue.push(socket.id);
@@ -78,6 +80,10 @@ io.on('connection', (socket) => {
                 names: game.names
             });
         }
+    });
+
+    socket.on('waitingForPlayers', (msg) => {
+        gameArea.innerHTML = `<p>${msg}</p>`;
     });
 
     socket.on('disconnect', () => {

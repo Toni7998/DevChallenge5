@@ -25,13 +25,24 @@ joinButton.addEventListener('click', () => {
 });
 
 socket.on('waitingForPlayers', (message) => {
-    gameArea.innerHTML = `<p>${message}</p>`;
+    document.getElementById('waitingMessage').textContent = message;
+    document.getElementById('waitingMessage').style.display = 'block';
+
+    const header = document.createElement('div');
+    header.classList.add('waiting-header');
+    header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
+
+    gameArea.innerHTML = ''; // Limpia cartas previas pero no elimina `#waitingMessage`
+    gameArea.appendChild(header);
+    gameArea.appendChild(document.getElementById('waitingMessage'));
+
     document.body.classList.remove('not-in-game');
 });
 
+
 socket.on('gameStart', (data) => {
     const { cards, names } = data;
-    gameArea.innerHTML = ''; // Limpiar área de juego
+    gameArea.innerHTML = '';
 
     const playerCards = cards[socket.id];
 
@@ -47,8 +58,12 @@ socket.on('gameStart', (data) => {
 
     document.body.classList.remove('not-in-game');
 
-    renderCards(playerCards);
+    const header = document.createElement('div');
+    header.classList.add('waiting-header');
+    header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
+    gameArea.appendChild(header);
 
+    renderCards(playerCards);
 });
 
 socket.on('gameResult', (result) => {
@@ -83,26 +98,26 @@ function selectCard(cardElem) {
 }
 
 function renderCards(cards) {
-    const gameArea = document.getElementById('gameArea');
-    gameArea.innerHTML = ''; // Limpiar área de juego antes de renderizar las cartas
+    const cardsContainer = document.createElement('div');
+    cardsContainer.classList.add('cards-container');
 
-    // Iterar sobre las cartas del jugador y mostrar cada una
     cards.forEach((card, index) => {
         const cardElem = document.createElement('div');
         cardElem.classList.add('card');
 
         const img = document.createElement('img');
-        img.src = `images/carta.png`; // Asegúrate de que las imágenes de las cartas estén en la carpeta correcta
+        img.src = `images/carta.png`;
         img.alt = `${card.value} de ${card.suit}`;
 
         cardElem.appendChild(img);
 
-        // Acción al seleccionar la carta
         cardElem.onclick = () => {
             socket.emit('pickCard', { gameId, cardIndex: index });
-            selectCard(cardElem); // Marcar la carta como seleccionada
+            selectCard(cardElem);
         };
 
-        gameArea.appendChild(cardElem);
+        cardsContainer.appendChild(cardElem);
     });
+
+    gameArea.appendChild(cardsContainer);
 }
