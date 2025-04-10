@@ -67,10 +67,22 @@ socket.on('gameStart', (data) => {
 });
 
 socket.on('gameResult', (result) => {
-    gameArea.innerHTML = `<h2>Resultat</h2>
-                          <p>${result.winner ? `Jugador: ${result.winner} ha guanyat!` : "Empat!"}</p>
-                          <p>La teva carta: ${result.card1.value} de ${result.card1.suit}</p>
-                          <p>La carta de l'altre jugador: ${result.card2.value} de ${result.card2.suit}</p>`;
+    gameArea.innerHTML = '';
+
+    const resultBox = document.createElement('div');
+    resultBox.classList.add('result-box');
+
+    const title = document.createElement('h2');
+    title.textContent = 'Resultat';
+
+    const winnerText = document.createElement('p');
+    winnerText.textContent = result.winner ? `Jugador: ${result.winner} ha guanyat!` : "Empat!";
+
+    const playerCard = document.createElement('p');
+    playerCard.textContent = `La teva carta: ${result.card1.value} de ${result.card1.suit}`;
+
+    const opponentCard = document.createElement('p');
+    opponentCard.textContent = `La carta de l'altre jugador: ${result.card2.value} de ${result.card2.suit}`;
 
     const restartButton = document.createElement('button');
     restartButton.textContent = 'Tornar a jugar';
@@ -78,8 +90,16 @@ socket.on('gameResult', (result) => {
         socket.emit('restartRound', { gameId });
         gameArea.innerHTML = '<p>Esperant a la nova ronda...</p>';
     };
-    gameArea.appendChild(restartButton);
+
+    resultBox.appendChild(title);
+    resultBox.appendChild(winnerText);
+    resultBox.appendChild(playerCard);
+    resultBox.appendChild(opponentCard);
+    resultBox.appendChild(restartButton);
+
+    gameArea.appendChild(resultBox);
 });
+
 
 socket.on('playerDisconnected', (data) => {
     gameArea.innerHTML = `<p>El jugador ${data.playerId} s'ha desconnectat. El joc ha acabat prematurament.</p>`;
