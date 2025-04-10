@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultBox.appendChild(restartButton);
 
         // Comprovem que els elements existeixen abans de modificar-los
-        const confirmBtn = document.getElementById('confirmBtn');
+        const confirmBtn = document.getElementById('confirm-card');
         const cards = document.getElementById('cards');
 
         if (confirmBtn) {
@@ -133,44 +133,66 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCards(cards) {
         const cardsContainer = document.createElement('div');
         cardsContainer.classList.add('cards-container');
-
+    
         selectedCardIndex = null;
-        confirmBtn.disabled = true;  // Inicialmente deshabilitado
-        confirmBtn.classList.remove('active');  // Elimina la clase 'active' al inicio
-
+    
+        // Eliminar y recrear el botón confirm-card si no está
+        let confirmBtn = document.getElementById('confirm-card');
+        if (!confirmBtn) {
+            confirmBtn = document.createElement('button');
+            confirmBtn.id = 'confirm-card';
+            confirmBtn.textContent = 'Confirmar carta';
+            confirmBtn.disabled = true;
+    
+            confirmBtn.onclick = () => {
+                if (selectedCardIndex !== null && !confirmBtn.disabled) {
+                    socket.emit('pickCard', { gameId, cardIndex: selectedCardIndex });
+    
+                    confirmBtn.disabled = true;
+                    confirmBtn.classList.add('active');
+                }
+            };
+    
+            gameArea.appendChild(confirmBtn);
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('active');
+            confirmBtn.style.display = 'block';
+        }
+    
         cards.forEach((card, index) => {
             const cardElem = document.createElement('div');
             cardElem.classList.add('card');
-
+    
             const img = document.createElement('img');
-            img.src = `images/carta.png`;  // Cambia esta URL si no es correcta
+            img.src = `images/carta.png`;
             img.alt = `${card.value} de ${card.suit}`;
-
+    
             cardElem.appendChild(img);
-
+    
             cardElem.onclick = () => {
-                selectCard(cardElem);  // Llama a la función para marcar la carta
-                selectedCardIndex = index;  // Guarda el índice de la carta seleccionada
-                confirmBtn.disabled = false;  // Habilita el botón de confirmación
+                selectCard(cardElem);
+                selectedCardIndex = index;
+                confirmBtn.disabled = false;
             };
-
+    
             cardsContainer.appendChild(cardElem);
         });
-
+    
         gameArea.appendChild(cardsContainer);
-    }
-
+    }    
+    
     // El evento del botón de confirmar
     confirmBtn.onclick = () => {
         if (selectedCardIndex !== null && !confirmBtn.disabled) {
             socket.emit('pickCard', { gameId, cardIndex: selectedCardIndex });
-
+    
             // Deshabilitar el botón después de hacer la selección
-            confirmBtn.disabled = true;
+            confirmBtn.disabled = true;  
             confirmBtn.classList.add('active');  // Mantener el color cambiado
-
+    
             // El botón no se puede hacer clic nuevamente hasta que el servidor lo permita
         }
-    };
+    };    
 
 });
