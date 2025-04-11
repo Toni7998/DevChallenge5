@@ -58,12 +58,41 @@ p {
     font-weight: bold;
 }
 
+/* Mejoras visuales para el nombre del jugador */
 .player-name {
-    background-color: #eee;
-    padding: 5px 10px;
-    border-radius: 10px;
+    font-family: 'Lora', serif;
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: #fff;
+    /* Texto blanco */
+    background: rgba(0, 0, 0, 0.6);
+    /* Fondo semi-transparente */
+    padding: 10px 20px;
+    border-radius: 20px;
+    /* Bordes suaves */
+    text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
+    /* Sombra sutil */
+    display: inline-block;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    /* Ligero espaciado entre letras */
+    transition: all 0.3s ease;
+    /* Transición suave */
+    text-transform: capitalize;
+    /* Capitaliza la primera letra */
 }
 
+/* Efecto Hover moderado */
+.player-name:hover {
+    background: rgba(0, 0, 0, 0.8);
+    /* Fondo ligeramente más oscuro */
+    transform: scale(1.05);
+    /* Aumento leve */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* Sombra suave */
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    /* Aumenta un poco la sombra */
+}
 
 /* Game Area Styling */
 #gameArea {
