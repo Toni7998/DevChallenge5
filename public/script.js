@@ -35,9 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         header.classList.add('waiting-header');
         header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
 
-        gameArea.innerHTML = '';
-        gameArea.appendChild(header);
-        gameArea.appendChild(document.getElementById('waitingMessage'));
+        const waitingMessage = document.getElementById('waitingMessage');
+        waitingMessage.textContent = message;
+        waitingMessage.style.display = 'block';
+
+        gameArea.replaceChildren(header, waitingMessage);
 
         document.body.classList.remove('not-in-game');
 

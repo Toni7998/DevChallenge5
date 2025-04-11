@@ -141,23 +141,34 @@ p {
     background: #e57373;
 }
 
-/* Button Styling */
+/* Estilo general para los botones */
 button {
-    padding: 18px 35px;
-    background: #3f51b5;
+    padding: 16px 30px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
     color: #fff;
     border: none;
-    border-radius: 40px;
+    border-radius: 50px;
     font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 1px;
     margin-top: 50px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover::before {
+    left: 100%;
 }
 
 button:hover {
-    background-color: #283593;
-    transform: scale(1.05);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 114, 255, 0.4);
+    background: linear-gradient(135deg, #0099ff, #0052cc);
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -225,21 +236,22 @@ button:hover {
     text-align: center;
 }
 
+/* Estilo específico para botones dentro del modal */
 .modal-content button {
-    width: 80%;
-    padding: 18px;
-    font-size: 1.3rem;
-    border: none;
-    border-radius: 40px;
-    background-color: #00c4cc;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
     color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 255, 255, 0.2);
 }
 
+
 .modal-content button:hover {
-    background-color: #008fa1;
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #03e9f4, #0cbaba);
+    transform: scale(1.04);
+    box-shadow: 0 10px 20px rgba(0, 255, 255, 0.4);
 }
 
 @keyframes fadeIn {
@@ -297,10 +309,12 @@ body.not-in-game h2 {
     font-size: 1.4rem;
 }
 
-/* Estilo para el botón cuando está activo (seleccionada la carta y enviado) */
+/* Botón cuando está activo */
 #confirm-card.active {
-    background-color: #4CAF50; /* Color de fondo verde */
-    color: white;  /* Texto en blanco */
-    border: 2px solid #388E3C; /* Borde verde más oscuro */
-    cursor: not-allowed;  /* Cambio de cursor para indicar que no se puede hacer clic de nuevo */
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: white;
+    border: 2px solid #2ecc71;
+    cursor: not-allowed;
+    box-shadow: 0 8px 20px rgba(72, 239, 180, 0.3);
+    transform: none;
 }
