@@ -35,11 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         header.classList.add('waiting-header');
         header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
 
-        gameArea.innerHTML = ''; // Limpia cartas previas pero no elimina `#waitingMessage`
+        gameArea.innerHTML = '';
         gameArea.appendChild(header);
         gameArea.appendChild(document.getElementById('waitingMessage'));
 
         document.body.classList.remove('not-in-game');
+
+        const confirmBtn = document.getElementById('confirm-card');
+        if (confirmBtn) confirmBtn.style.display = 'none';
     });
 
     socket.on('gameStart', (data) => {
@@ -118,19 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gameArea.innerHTML = `<p>El jugador ${data.playerId} s'ha desconnectat. El joc ha acabat prematurament.</p>`;
         document.body.classList.add('not-in-game');
 
-        // Ocultar o eliminar el botón de "Seleccionar carta"
         const confirmBtn = document.getElementById('confirm-card');
-        if (confirmBtn) {
-            confirmBtn.style.display = 'none';
-        }
-
-        // También ocultar las cartas si están visibles
-        const cardsContainer = document.querySelector('.cards-container');
-        if (cardsContainer) {
-            cardsContainer.style.display = 'none';
-        }
+        if (confirmBtn) confirmBtn.style.display = 'none';
     });
-
 
     socket.on('errorMessage', (msg) => {
         gameArea.innerHTML = `<div class="message-box lose"><p>${msg}</p></div>`;
@@ -166,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            gameArea.appendChild(confirmBtn);
         } else {
             confirmBtn.disabled = true;
             confirmBtn.classList.remove('active');
@@ -193,19 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         gameArea.appendChild(cardsContainer);
+        gameArea.appendChild(confirmBtn);
     }
-
-    // El evento del botón de confirmar
-    confirmBtn.onclick = () => {
-        if (selectedCardIndex !== null && !confirmBtn.disabled) {
-            socket.emit('pickCard', { gameId, cardIndex: selectedCardIndex });
-
-            // Deshabilitar el botón después de hacer la selección
-            confirmBtn.disabled = true;
-            confirmBtn.classList.add('active');  // Mantener el color cambiado
-
-            // El botón no se puede hacer clic nuevamente hasta que el servidor lo permita
-        }
-    };
 
 });
