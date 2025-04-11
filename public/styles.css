@@ -105,8 +105,10 @@ p {
 
 /* Estilo para la carta seleccionada */
 .card.selected {
-    border: 2px solid #ffcc00; /* Resaltar con borde amarillo */
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.7); /* Agregar sombra */
+    border: 2px solid #ffcc00;
+    /* Resaltar con borde amarillo */
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    /* Agregar sombra */
 }
 
 .confirm-card-btn {
@@ -293,20 +295,74 @@ body.not-in-game h2 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(135deg, #1e1e1e, #2e2e2e);
     color: white;
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 25px;
+    padding: 50px;
     max-width: 600px;
-    margin: 0 auto;
-    margin-top: 60px;
+    margin: 60px auto;
     text-align: center;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
 }
 
-.result-box p {
-    margin: 15px 0;
+.result-box::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 200, 0.2), transparent 70%);
+    animation: pulseGlow 4s infinite;
+    z-index: 0;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+.result-box p,
+.result-box h2 {
+    z-index: 1;
+    position: relative;
+}
+
+.result-box h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #00ffc3;
+    text-shadow: 0 0 8px rgba(0, 255, 200, 0.7);
+}
+
+.result-box .score-status {
     font-size: 1.4rem;
+    margin-top: 20px;
+    color: #ccc;
+}
+
+.result-box .repeat-info {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    color: #00ffc3;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 25px;
+    border-radius: 30px;
+    border: 2px dashed #00ffc3;
 }
 
 /* Botón cuando está activo */
