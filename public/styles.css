@@ -134,9 +134,9 @@ p {
 
 /* Estilo para la carta seleccionada */
 .card.selected {
-    border: 2px solid #ffcc00;
+    border: 2px solid #f6ff71;
     /* Resaltar con borde amarillo */
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    box-shadow: 0 0 10px #ffec9f;
     /* Agregar sombra */
 }
 
@@ -329,7 +329,7 @@ body.not-in-game h2 {
     border-radius: 25px;
     padding: 50px;
     max-width: 600px;
-    margin: 60px auto;
+    margin: 20px auto 60px auto;
     text-align: center;
     box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.6);
     position: relative;

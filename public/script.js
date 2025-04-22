@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.emit('joinGame', { gameId, playerName });
             modal.style.display = 'none';
         } else {
-            alert('Per favor, omple tots els camps!');
+            alert('Si us plau, ompli tots els camps!');
         }
     });
 
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameArea.innerHTML = `
             <div class="message-box lose">
                 <h2>No pots jugar en aquesta partida.</h2>
-                <p>Només es permeten 2 jugadors actius. Torna enrere i entra a una altra partida.</p>
+                <p>Només es permeten 2 jugadors actius. Torna enrere i entra a una altre partida.</p>
             </div>`;
             document.body.classList.add('not-in-game');
             return;

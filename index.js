@@ -10,7 +10,7 @@ let games = {}; // Almacena las partidas en curso
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
-    console.log('Un jugador se ha conectado:', socket.id);
+    console.log('Un jugador s\'ha conectat:', socket.id);
 
     socket.on('joinGame', ({ gameId, playerName }) => {
         if (!games[gameId]) {
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
             }
         } else {
             games[gameId].waitingQueue.push(socket.id);
-            socket.emit('waitingForPlayers', 'Estás en espera de otro jugador para comenzar la partida.');
+            socket.emit('waitingForPlayers', 'Estàs en espera d\'un altre jugador per començar la partida.');
         }
     });
 
@@ -56,11 +56,11 @@ io.on('connection', (socket) => {
                     io.to(gameId).emit('gameResult', winner);
                 }
             } else {
-                console.log(`Jugador ${socket.id} ha intentado triar una carta però la carta no és vàlida o no existeix.`);
+                console.log(`Jugador ${socket.id} ha intentat triar una carta però la carta no és vàlida o no existeix.`);
                 socket.emit('errorMessage', 'La carta no és vàlida.');
             }
         } else {
-            console.log(`Jugador ${socket.id} ha intentado interactuar pero no está en el juego.`);
+            console.log(`Jugador ${socket.id} ha intentat interactuar però no està en el joc.`);
             socket.emit('errorMessage', 'No estàs dins la partida activa.');
         }
     });
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('Un jugador se ha desconectado:', socket.id);
+        console.log('Un jugador s\'ha desconectat:', socket.id);
 
         let wasInGame = false;
 
@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
 });
 
 function generateDeck() {
-    const suits = ['Corazones', 'Diamantes', 'Tréboles', 'Picas'];
+    const suits = ['Cors', 'Diamants', 'Trèvols', 'Piques'];
     const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     let deck = [];
     suits.forEach(suit => {
@@ -159,5 +159,5 @@ function determineWinner(cards, names) {
 }
 
 server.listen(3000, () => {
-    console.log('Servidor escuchando en el puerto 3000');
+    console.log('Servidor escoltant en el port 3000');
 });
