@@ -88,41 +88,43 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('Un jugador s\'ha desconectat:', socket.id);
-
+    
         let wasInGame = false;
-
+    
         for (const gameId in games) {
             const game = games[gameId];
-
+    
             const playerIndex = game.players.indexOf(socket.id);
             if (playerIndex !== -1) {
                 // Solo si estaba en la partida lo eliminamos
                 game.players.splice(playerIndex, 1);
+                const playerName = game.names[socket.id]; // Guardamos el nombre del jugador
                 delete game.names[socket.id];
                 delete game.cards[socket.id];
                 wasInGame = true;
-
+    
                 // Notificar a los demás jugadores de la desconexión
-                io.to(gameId).emit('playerDisconnected', { playerId: socket.id });
-
+                io.to(gameId).emit('playerDisconnected', { playerName }); // Enviar el nombre del jugador
+    
                 // Opcional: eliminar la partida si ya no queda nadie
                 if (game.players.length === 0 && game.waitingQueue.length === 0) {
                     delete games[gameId];
                     console.log(`Partida ${gameId} eliminada per quedar buida.`);
                 }
             }
-
+    
             // También lo eliminamos de la cola de espera si estuviera ahí
             const waitingIndex = game.waitingQueue.indexOf(socket.id);
             if (waitingIndex !== -1) {
                 game.waitingQueue.splice(waitingIndex, 1);
             }
         }
-
+    
         if (!wasInGame) {
             console.log(`Socket ${socket.id} s'ha desconectat però no estava en cap partida activa.`);
         }
     });
+        
 });
 
 function generateDeck() {

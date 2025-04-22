@@ -146,6 +146,11 @@ p {
     font-size: 16px;
 }
 
+.card.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* Result Message Box Styling */
 .message-box {
     padding: 25px;
