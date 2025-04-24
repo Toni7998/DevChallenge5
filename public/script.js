@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('playerDisconnected', (data) => {
         gameArea.innerHTML = `
-            <p>El jugador ${data.playerName} s'ha desconnectat. Pots esperar un altre jugador o buscar una nova partida.</p>
+            <p>El jugador ${data.playerName} s'ha desconnectat. Pots esperar un altre jugador o buscar/crear una nova partida.</p>
             <button id="findNewGameButton">Buscar una altra partida</button>
         `;
         document.body.classList.add('not-in-game');
@@ -132,8 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const findNewGameButton = document.getElementById('findNewGameButton');
         findNewGameButton.addEventListener('click', () => {
             // Lógica para buscar una nueva partida o esperar
-            // Aquí podrías agregar la lógica que prefieras para hacer que el jugador busque una nueva partida
-            socket.emit('joinGame', { gameId: 'nuevoGameId', playerName });
+            window.location.reload(); // Reinicia la pestaña completamente
         });
     });
 
