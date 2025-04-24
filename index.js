@@ -13,32 +13,47 @@ io.on('connection', (socket) => {
     console.log('Un jugador s\'ha conectat:', socket.id);
 
     socket.on('joinGame', ({ gameId, playerName }) => {
-        if (!games[gameId]) {
-            games[gameId] = { players: [], names: {}, waitingQueue: [], cards: {} };
+        
+        const game = games[gameId];
+
+        // Si ya existe y está llena, no dejar entrar
+        if (game && game.players.length >= 2) {
+            socket.emit('errorMessage', 'La partida ya tiene 2 jugadores. Usa otro Game ID.');
+            socket.emit('showRetryButton');
+            return;
         }
 
-        if (games[gameId].players.length < 2) {
-            games[gameId].players.push(socket.id);
-            games[gameId].names[socket.id] = playerName;
-            socket.join(gameId);
+        // Si no existe, crear la partida
+        if (!game) {
+            games[gameId] = {
+                players: [],
+                names: {},
+                cards: {},
+                status: 'waiting',
+                waitingQueue: []  // Asegúrate de agregar esto
+            };
+        }        
 
-            if (games[gameId].players.length === 2) {
-                let cards = generateDeck();
-                games[gameId].cards = {
-                    [games[gameId].players[0]]: cards.splice(0, 5),
-                    [games[gameId].players[1]]: cards.splice(0, 5),
-                };
+        // Añadir jugador a la partida
+        games[gameId].players.push(socket.id);
+        games[gameId].names[socket.id] = playerName;
+        socket.join(gameId);
 
-                io.to(gameId).emit('gameStart', {
-                    cards: games[gameId].cards,
-                    names: games[gameId].names
-                });
-            } else {
-                socket.emit('waitingForPlayers', 'Esperant a un altre jugador per començar la partida...');
-            }
+        if (games[gameId].players.length === 2) {
+            // Empezar la partida
+            let cards = generateDeck();
+            games[gameId].cards = {
+                [games[gameId].players[0]]: cards.splice(0, 5),
+                [games[gameId].players[1]]: cards.splice(0, 5),
+            };
+            games[gameId].status = 'in_progress';
+
+            io.to(gameId).emit('gameStart', {
+                cards: games[gameId].cards,
+                names: games[gameId].names
+            });
         } else {
-            games[gameId].waitingQueue.push(socket.id);
-            socket.emit('waitingForPlayers', 'Estàs en espera d\'un altre jugador per començar la partida.');
+            socket.emit('waitingForPlayers', 'Esperando a otro jugador...');
         }
     });
 

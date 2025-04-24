@@ -211,4 +211,17 @@ document.addEventListener('DOMContentLoaded', () => {
         gameArea.appendChild(confirmBtn);
     }
 
+    socket.on('showRetryButton', () => {
+        const retryBtn = document.createElement('button');
+        retryBtn.textContent = 'Buscar una altra partida';
+        retryBtn.classList.add('retry-button'); // opcional para estilos
+
+        retryBtn.addEventListener('click', () => {
+            window.location.reload(); // Reinicia la página para volver al modal inicial
+        });
+
+        // Muestra el botón en el gameArea
+        gameArea.appendChild(retryBtn);
+    });
+
 });
