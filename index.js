@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
                 names: games[gameId].names
             });
         } else {
-            socket.emit('waitingForPlayers', 'Esperando a otro jugador...');
+            socket.emit('waitingForPlayers', 'Esperant a un altre jugador...');
         }
     });
 
