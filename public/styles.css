@@ -53,21 +53,27 @@ p {
 
 .waiting-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
     padding: 10px;
     font-weight: bold;
 }
 
 /* Mejoras visuales para el nombre del jugador */
-.player-name {
+.player-name,
+.room-name {
     font-family: 'Lora', serif;
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
+    padding: 8px 14px;
     color: #fff;
     /* Texto blanco */
     background: rgba(0, 0, 0, 0.6);
     /* Fondo semi-transparente */
-    padding: 10px 20px;
     border-radius: 20px;
     /* Bordes suaves */
     text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
@@ -83,7 +89,8 @@ p {
 }
 
 /* Efecto Hover moderado */
-.player-name:hover {
+.player-name:hover,
+.room-name:hover {
     background: rgba(0, 0, 0, 0.8);
     /* Fondo ligeramente más oscuro */
     transform: scale(1.05);
@@ -93,6 +100,7 @@ p {
     text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     /* Aumenta un poco la sombra */
 }
+
 
 /* Game Area Styling */
 #gameArea {

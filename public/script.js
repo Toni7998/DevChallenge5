@@ -12,6 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameArea = document.getElementById('gameArea');
     const confirmBtn = document.getElementById('confirm-card');
 
+    function createHeader() {
+        const header = document.createElement('div');
+        header.classList.add('waiting-header');
+
+        const player = document.createElement('span');
+        player.classList.add('player-name');
+        player.textContent = `Jugador: ${playerName}`;
+
+        const room = document.createElement('span');
+        room.classList.add('room-name');
+        room.textContent = `Sala: ${gameId}`;
+
+        header.append(player, room);
+        return header;
+    }
+
+
     joinButton.addEventListener('click', () => {
         const gameIdInputValue = gameIdInput.value.trim();
         const playerNameInputValue = playerNameInput.value.trim();
@@ -28,18 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('waitingForPlayers', (message) => {
-        document.getElementById('waitingMessage').textContent = message;
-        document.getElementById('waitingMessage').style.display = 'block';
-
-        const header = document.createElement('div');
-        header.classList.add('waiting-header');
-        header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
-
         const waitingMessage = document.getElementById('waitingMessage');
         waitingMessage.textContent = message;
         waitingMessage.style.display = 'block';
 
-        gameArea.replaceChildren(header, waitingMessage);
+        gameArea.replaceChildren(createHeader(), waitingMessage);
 
         document.body.classList.remove('not-in-game');
 
@@ -65,31 +75,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.body.classList.remove('not-in-game');
 
-        const header = document.createElement('div');
-        header.classList.add('waiting-header');
-        header.innerHTML = `<span class="player-name">Jugador: ${playerName}</span>`;
-        gameArea.appendChild(header);
-
+        gameArea.appendChild(createHeader());
         renderCards(playerCards);
     });
 
     socket.on('gameResult', (result) => {
         gameArea.innerHTML = '';
 
+        const messages = {
+            win: { title: 'Has guanyat! 🎉', text: 'Enhorabona, la teva carta era la més alta.' },
+            lose: { title: 'Has perdut 😞', text: `${result.opponentName || "L'altre jugador"} ha guanyat aquesta ronda.` },
+            draw: { title: '🤝 Empat!', text: 'Les dues cartes tenen el mateix valor.' }
+        };
+
         const resultBox = document.createElement('div');
-        resultBox.classList.add('result-box');
+        resultBox.classList.add('result-box', result.outcome);
 
         const title = document.createElement('h2');
-        title.textContent = 'Resultat';
+        title.textContent = messages[result.outcome].title;
 
         const winnerText = document.createElement('p');
-        winnerText.textContent = result.winner ? `Jugador: ${result.winner} ha guanyat!` : "Empat!";
+        winnerText.textContent = messages[result.outcome].text;
 
-        const playerCard = document.createElement('p');
-        playerCard.textContent = `La teva carta: ${result.card1.value} de ${result.card1.suit}`;
+        const playerCardText = document.createElement('p');
+        playerCardText.textContent = `La teva carta: ${result.myCard.value} de ${result.myCard.suit}`;
 
-        const opponentCard = document.createElement('p');
-        opponentCard.textContent = `La carta de l'altre jugador: ${result.card2.value} de ${result.card2.suit}`;
+        const opponentCardText = document.createElement('p');
+        opponentCardText.textContent = `La carta de ${result.opponentName || "l'altre jugador"}: ${result.opponentCard.value} de ${result.opponentCard.suit}`;
 
         const restartButton = document.createElement('button');
         restartButton.textContent = 'Tornar a jugar';
@@ -100,21 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultBox.appendChild(title);
         resultBox.appendChild(winnerText);
-        resultBox.appendChild(playerCard);
-        resultBox.appendChild(opponentCard);
+        resultBox.appendChild(playerCardText);
+        resultBox.appendChild(opponentCardText);
         resultBox.appendChild(restartButton);
 
-        // Comprovem que els elements existeixen abans de modificar-los
         const confirmBtn = document.getElementById('confirm-card');
-        const cards = document.getElementById('cards');
-
-        if (confirmBtn) {
-            confirmBtn.style.display = 'none';
-        }
-
-        if (cards) {
-            cards.style.display = 'none';
-        }
+        const cardsContainer = document.querySelector('.cards-container');
+        if (confirmBtn) confirmBtn.style.display = 'none';
+        if (cardsContainer) cardsContainer.style.display = 'none';
 
         gameArea.appendChild(resultBox);
     });

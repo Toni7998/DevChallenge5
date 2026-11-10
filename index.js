@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
     console.log('Un jugador s\'ha conectat:', socket.id);
 
     socket.on('joinGame', ({ gameId, playerName }) => {
-        
+
         const game = games[gameId];
 
         // Si ya existe y está llena, no dejar entrar
@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
                 status: 'waiting',
                 waitingQueue: []  // Asegúrate de agregar esto
             };
-        }        
+        }
 
         // Añadir jugador a la partida
         games[gameId].players.push(socket.id);
@@ -61,14 +61,32 @@ io.on('connection', (socket) => {
         const { gameId, cardIndex } = data;
         const game = games[gameId];
 
-        // Comprobamos si el jugador está en el juego antes de intentar acceder a las cartas
         if (game && game.players.includes(socket.id)) {
             if (game.cards && game.cards[socket.id] && Array.isArray(game.cards[socket.id]) && game.cards[socket.id][cardIndex]) {
                 game.cards[socket.id].chosenCard = game.cards[socket.id][cardIndex];
 
-                if (Object.values(game.cards).every(cards => cards.chosenCard !== undefined)) {
-                    const winner = determineWinner(game.cards, game.names);
-                    io.to(gameId).emit('gameResult', winner);
+                const everyonePicked = game.players.length === 2 &&
+                    game.players.every(id => game.cards[id] && game.cards[id].chosenCard !== undefined);
+
+                if (everyonePicked) {
+                    const [idA, idB] = game.players;
+                    const cardA = game.cards[idA].chosenCard;
+                    const cardB = game.cards[idB].chosenCard;
+                    const winnerId = determineWinner(cardA, cardB, idA, idB);
+
+                    // Mandamos a cada jugador SU resultado
+                    [[idA, idB, cardA, cardB], [idB, idA, cardB, cardA]].forEach(([me, opp, myCard, oppCard]) => {
+                        let outcome = 'draw';
+                        if (winnerId === me) outcome = 'win';
+                        else if (winnerId === opp) outcome = 'lose';
+
+                        io.to(me).emit('gameResult', {
+                            outcome,
+                            myCard,
+                            opponentCard: oppCard,
+                            opponentName: game.names[opp]
+                        });
+                    });
                 }
             } else {
                 console.log(`Jugador ${socket.id} ha intentat triar una carta però la carta no és vàlida o no existeix.`);
@@ -97,18 +115,18 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('waitingForPlayers', (msg) => {
-        gameArea.innerHTML = `<p>${msg}</p>`;
-    });
+    //socket.on('waitingForPlayers', (msg) => {
+    //   gameArea.innerHTML = `<p>${msg}</p>`;
+    // });
 
     socket.on('disconnect', () => {
         console.log('Un jugador s\'ha desconectat:', socket.id);
-    
+
         let wasInGame = false;
-    
+
         for (const gameId in games) {
             const game = games[gameId];
-    
+
             const playerIndex = game.players.indexOf(socket.id);
             if (playerIndex !== -1) {
                 // Solo si estaba en la partida lo eliminamos
@@ -117,29 +135,29 @@ io.on('connection', (socket) => {
                 delete game.names[socket.id];
                 delete game.cards[socket.id];
                 wasInGame = true;
-    
+
                 // Notificar a los demás jugadores de la desconexión
                 io.to(gameId).emit('playerDisconnected', { playerName }); // Enviar el nombre del jugador
-    
+
                 // Opcional: eliminar la partida si ya no queda nadie
                 if (game.players.length === 0 && game.waitingQueue.length === 0) {
                     delete games[gameId];
                     console.log(`Partida ${gameId} eliminada per quedar buida.`);
                 }
             }
-    
+
             // También lo eliminamos de la cola de espera si estuviera ahí
             const waitingIndex = game.waitingQueue.indexOf(socket.id);
             if (waitingIndex !== -1) {
                 game.waitingQueue.splice(waitingIndex, 1);
             }
         }
-    
+
         if (!wasInGame) {
             console.log(`Socket ${socket.id} s'ha desconectat però no estava en cap partida activa.`);
         }
     });
-        
+
 });
 
 function generateDeck() {
@@ -162,17 +180,14 @@ function shuffle(deck) {
     return deck;
 }
 
-function determineWinner(cards, names) {
+function determineWinner(cardA, cardB, idA, idB) {
     const valuesOrder = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-    const [player1, player2] = Object.keys(cards);
-    const [card1, card2] = [cards[player1].chosenCard, cards[player2].chosenCard];
+    const a = valuesOrder.indexOf(cardA.value);
+    const b = valuesOrder.indexOf(cardB.value);
 
-    const index1 = valuesOrder.indexOf(card1.value);
-    const index2 = valuesOrder.indexOf(card2.value);
-
-    if (index1 > index2) return { winner: names[player1], card1, card2 };
-    if (index2 > index1) return { winner: names[player2], card1, card2 };
-    return { winner: null, card1, card2 };
+    if (a > b) return idA;
+    if (b > a) return idB;
+    return null; // empat
 }
 
 server.listen(3000, () => {
